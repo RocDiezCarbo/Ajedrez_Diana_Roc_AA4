@@ -41,3 +41,16 @@ void inicializatePieces() {
     board[0][6] = blackHorse;
     board[0][7] = blackTower;
 }
+
+void printBoard() {
+    emptyBoard();
+    inicializatePieces();
+    inicializatePawns();
+
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            std::cout << board[y][x] << ' ';
+        }
+        std::cout << '\n';
+    }
+}
