@@ -2,6 +2,7 @@
 
 char board[BOARD_SIZE][BOARD_SIZE];
 
+// Create the 8x8 board
 void emptyBoard() {
     for (int y = 0; y < BOARD_SIZE; y++) {
         for (int x = 0; x < BOARD_SIZE; x++) {
@@ -10,6 +11,7 @@ void emptyBoard() {
     }
 }
 
+// Inicializate the Pawns
 void inicializatePawns() {
     for (int x = 0; x < BOARD_SIZE; x++) {
         board[6][x] = whitePawn;
@@ -20,8 +22,9 @@ void inicializatePawns() {
     }
 }
 
+// Inicializate the rest of the pieces
 void inicializatePieces() {
-    // Piezas blancas
+    // White pices
     board[7][0] = whiteTower;
     board[7][1] = whiteHorse;
     board[7][2] = whiteBishop;
@@ -31,7 +34,7 @@ void inicializatePieces() {
     board[7][6] = whiteHorse;
     board[7][7] = whiteTower;
 
-    // Piezas negras
+    // Black pices
     board[0][0] = blackTower;
     board[0][1] = blackHorse;
     board[0][2] = blackBishop;
@@ -41,6 +44,9 @@ void inicializatePieces() {
     board[0][6] = blackHorse;
     board[0][7] = blackTower;
 }
+
+
+// Make the print of the chess table
 
 void printBoard() {
     emptyBoard();
