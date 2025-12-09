@@ -4,7 +4,7 @@
 const int BOARD_SIZE = 8;
 extern char board[BOARD_SIZE][BOARD_SIZE];   // Solo declaración, no definición
 
-// Constants board
+// Empty Space
 const char emptySpace = '*';
 
 // White pieces
