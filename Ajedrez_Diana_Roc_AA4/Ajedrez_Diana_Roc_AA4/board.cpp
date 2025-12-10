@@ -55,6 +55,7 @@ void printIndex() {
 
     for (int y = 0; y < BOARD_SIZE; y++) {
         std::cout << (y + 1) << ' ';
+
         for (int x = 0; x < BOARD_SIZE; x++) {
             std::cout << board[y][x] << ' ';
         }

@@ -8,3 +8,5 @@ void emptyBoard();
 void inicializatePieces();
 void inicializatePawns();
 void printBoard();
+
+
