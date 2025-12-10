@@ -2,7 +2,7 @@
 
 char board[BOARD_SIZE][BOARD_SIZE];
 
-// Create the 8x8 board
+// Create the 8x8 empty board
 void emptyBoard() {
     for (int y = 0; y < BOARD_SIZE; y++) {
         for (int x = 0; x < BOARD_SIZE; x++) {
