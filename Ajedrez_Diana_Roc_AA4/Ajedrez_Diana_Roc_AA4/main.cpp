@@ -1,8 +1,9 @@
 #include <iostream>
-#include "constant.h"
+#include "constants.h"
 #include "board.h"
 
 int main() {
+    initBoard();
     printBoard();
     return 0;
 }

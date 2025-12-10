@@ -1,10 +1,9 @@
 #pragma once
+#include "constants.h"
 #include <iostream>
-#include "constant.h"
 
-// Declarar funciones
-void printIndex();
 void emptyBoard();
-void inicializatePieces();
-void inicializatePawns();
+void initializePawns();
+void initializePieces();
+void initBoard();
 void printBoard();
