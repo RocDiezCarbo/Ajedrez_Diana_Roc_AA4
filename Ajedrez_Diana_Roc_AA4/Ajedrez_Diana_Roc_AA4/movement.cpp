@@ -55,7 +55,7 @@ bool isRookMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     if (fromRow != toRow && fromCol != toCol)
         return false;
 
-    // 2. Dirección del movimiento
+    // Direction
     int deltaRow = 0, deltaCol = 0;
 
     if (toRow > fromRow)     
@@ -68,7 +68,7 @@ bool isRookMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     else if (toCol < fromCol)
         deltaCol = -1;
 
-    // 3. Comprobar que no haya piezas en medio
+    // Check no pieces in front
     int row = fromRow + deltaRow;
     int col = fromCol + deltaCol;
 
@@ -81,7 +81,7 @@ bool isRookMoveValid(int fromRow, int fromCol, int toRow, int toCol)
         col += deltaCol;
     }
 
-    // 4. Comprobar la casilla de destino
+    // Chack destinatio
     if (target != emptySpace)
     {
         bool originWhite = std::isupper(static_cast<unsigned char>(piece));
