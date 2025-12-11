@@ -6,14 +6,41 @@
 
 bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
+    char piece = getPiece(fromRow, fromCol);
 
-   if (fromRow<0 && fromRow>BOARD_SIZE || fromCol<0 && fromCol> BOARD_SIZE || ) 
+    if (fromRow < 0 && fromRow >= BOARD_SIZE || toCol < 0 && toCol >= BOARD_SIZE) {
+
+        return false;
+    }
+
+    if (piece!=whitePawn && piece != blackPawn)
+    {
+        return false; 
+    }
+
+    bool isWhite = (piece = whitePawn); //Dirección: -1 para BLANCAS
+    int direction;
+    if (isWhite)
+    {
+        direction = -1;
+    }
+    else
+    {
+        direction = 1;
+    }
+
+
+
+
+
+    
+
+   
      
 
      
 
 
-   char piece = getPiece(fromRow, fromCol);
 
     
 
