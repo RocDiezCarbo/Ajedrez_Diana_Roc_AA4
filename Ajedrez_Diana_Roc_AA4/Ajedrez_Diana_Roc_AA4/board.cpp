@@ -1,76 +1,94 @@
-#include <iostream>
-#include "constants.h"
 #include "board.h"
+#include "constants.h"
+#include <iostream>
 
-// Global board definition
-char board[BOARD_SIZE][BOARD_SIZE];
+// Constructor: build an empty board and then place all standard pieces.
+Board::Board() {
+    init();
+}
 
-// Create an empty 8x8 board
-void emptyBoard() {
-    for (int y = 0; y < BOARD_SIZE; y++) {
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            board[y][x] = emptySpace;
+// Clears the board by filling all squares with emptySpace.
+void Board::clear() {
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            squares[row][col] = emptySpace;
         }
     }
 }
 
-// Initialize pawns
-void initializePawns() {
-    for (int x = 0; x < BOARD_SIZE; x++) {
-        board[6][x] = whitePawn; // White pawns
-        board[1][x] = blackPawn; // Black pawns
+// Places white and black pawns on their default ranks.
+void Board::initializePawns() {
+    // White pawns on rank 7 (index 6)
+    for (int col = 0; col < BOARD_SIZE; ++col) {
+        squares[6][col] = whitePawn;
+    }
+
+    // Black pawns on rank 2 (index 1)
+    for (int col = 0; col < BOARD_SIZE; ++col) {
+        squares[1][col] = blackPawn;
     }
 }
 
-// Initialize the rest of the pieces
-void initializePieces() {
-    // White pieces
-    board[7][0] = whiteTower;
-    board[7][1] = whiteHorse;
-    board[7][2] = whiteBishop;
-    board[7][3] = whiteQueen;
-    board[7][4] = whiteKing;
-    board[7][5] = whiteBishop;
-    board[7][6] = whiteHorse;
-    board[7][7] = whiteTower;
+// Places rooks, knights, bishops, queen, and king on starting squares.
+void Board::initializePieces() {
+    // White back rank (index 7)
+    squares[7][0] = whiteTower;
+    squares[7][1] = whiteHorse;
+    squares[7][2] = whiteBishop;
+    squares[7][3] = whiteQueen;
+    squares[7][4] = whiteKing;
+    squares[7][5] = whiteBishop;
+    squares[7][6] = whiteHorse;
+    squares[7][7] = whiteTower;
 
-    // Black pieces
-    board[0][0] = blackTower;
-    board[0][1] = blackHorse;
-    board[0][2] = blackBishop;
-    board[0][3] = blackQueen;
-    board[0][4] = blackKing;
-    board[0][5] = blackBishop;
-    board[0][6] = blackHorse;
-    board[0][7] = blackTower;
+    // Black back rank (index 0)
+    squares[0][0] = blackTower;
+    squares[0][1] = blackHorse;
+    squares[0][2] = blackBishop;
+    squares[0][3] = blackQueen;
+    squares[0][4] = blackKing;
+    squares[0][5] = blackBishop;
+    squares[0][6] = blackHorse;
+    squares[0][7] = blackTower;
 }
 
-// Print the board row/column indexes
-void printIndex() {
+// Initializes the full board to the standard starting position.
+void Board::init() {
+    clear();
+    initializePieces();
+    initializePawns();
+}
+
+// Helper method to print coordinates and the internal board.
+void Board::printWithIndex() const {
+    // Print column indices (1..BOARD_SIZE)
     std::cout << "  ";
-    for (int x = 0; x < BOARD_SIZE; x++) {
-        std::cout << (x + 1) << ' ';
+    for (int col = 0; col < BOARD_SIZE; ++col) {
+        std::cout << (col + 1) << ' ';
     }
     std::cout << '\n';
 
-    for (int y = 0; y < BOARD_SIZE; y++) {
-        std::cout << (y + 1) << ' ';
-
-        for (int x = 0; x < BOARD_SIZE; x++) {
-            std::cout << board[y][x] << ' ';
+    // Print each row index and the row contents.
+    for (int row = 0; row < BOARD_SIZE; ++row) {
+        std::cout << (row + 1) << ' ';
+        for (int col = 0; col < BOARD_SIZE; ++col) {
+            std::cout << squares[row][col] << ' ';
         }
         std::cout << '\n';
     }
 }
 
-// Initialize the complete board
-void initBoard() {
-    emptyBoard();
-    initializePieces();
-    initializePawns();
+// Public interface to print the board (does not modify state).
+void Board::print() const {
+    printWithIndex();
 }
 
-// Print the board (does not modify it)
-void printBoard() {
-    printIndex();
+// Returns the piece at the given row and column.
+char Board::getPiece(int row, int col) const {
+    return squares[row][col];
+}
+
+// Sets the piece at the given row and column.
+void Board::setPiece(int row, int col, char piece) {
+    squares[row][col] = piece;
 }

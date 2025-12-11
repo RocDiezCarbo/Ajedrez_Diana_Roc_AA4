@@ -3,7 +3,11 @@
 #include "board.h"
 
 int main() {
-    initBoard();
-    printBoard();
+    // Create a chess board instance. The constructor initializes it.
+    Board board;
+
+    // Print the current board to the console.
+    board.print();
+
     return 0;
 }
