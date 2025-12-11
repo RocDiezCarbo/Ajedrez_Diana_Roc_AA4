@@ -1,5 +1,8 @@
 #include "constants.h"
 
+// Global board array used by the whole program
+char board[BOARD_SIZE][BOARD_SIZE];
+
 // Empty Space
 const char emptySpace = '*';
 

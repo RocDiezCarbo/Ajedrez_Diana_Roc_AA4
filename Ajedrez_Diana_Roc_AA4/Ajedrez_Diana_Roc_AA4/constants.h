@@ -3,10 +3,8 @@
 // Board size
 const int BOARD_SIZE = 8;
 
-// Board 
+// Global board storage (defined in constants.cpp)
 extern char board[BOARD_SIZE][BOARD_SIZE];
-
-// Piece declarations (actual values are defined in constants.cpp)
 
 // Empty square
 extern const char emptySpace;
