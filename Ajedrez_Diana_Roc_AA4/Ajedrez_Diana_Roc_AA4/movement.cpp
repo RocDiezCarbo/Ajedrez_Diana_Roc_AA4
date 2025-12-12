@@ -253,5 +253,6 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol) {
             return false;
         }
     }
-
     return true;
+}
+
