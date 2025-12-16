@@ -1,258 +1,156 @@
 ﻿#include "board.h"
 #include "constants.h"
 #include "movement.h"
-#include <iostream>
-#include <cctype>   // para std::isupper, std::islower
+#include <cctype>
+
+// ---------- utilidades internas ----------
+
+static inline bool inBounds(int r, int c)
+{
+    return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
+}
+
+static inline bool isWhitePiece(char p)
+{
+    return std::isupper(static_cast<unsigned char>(p));
+}
+
+static inline bool sameColor(char a, char b)
+{
+    return isWhitePiece(a) == isWhitePiece(b);
+}
+
+static inline int absInt(int x)
+{
+    return (x < 0) ? -x : x;
+}
+
+// ---------- PAWN ----------
 
 bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
     char piece = getPiece(fromRow, fromCol);
-
-    if (fromRow < 0 || fromRow >= BOARD_SIZE || toRow < 0 && toRow >= BOARD_SIZE || fromCol < 0 || fromCol >= BOARD_SIZE || toCol < 0 || toCol >= BOARD_SIZE) {
-
+    if (piece != whitePawn && piece != blackPawn)
         return false;
-    }
 
-    if (piece!=whitePawn && piece != blackPawn)
+    bool isWhite = (piece == whitePawn);
+    int direction = isWhite ? -1 : 1;
+    int startRow = isWhite ? 6 : 1;
+
+    int dr = toRow - fromRow;
+    int dc = toCol - fromCol;
+
+    char target = getPiece(toRow, toCol);
+
+    // avance 1
+    if (dc == 0 && dr == direction)
+        return target == emptySpace;
+
+    // avance 2 desde inicio
+    if (dc == 0 && dr == 2 * direction)
     {
-        return false; 
+        if (fromRow != startRow) return false;
+        int midRow = fromRow + direction;
+        return getPiece(midRow, fromCol) == emptySpace &&
+            target == emptySpace;
     }
 
-    bool isWhite = (piece = whitePawn); //dirección: -1 para BLANCAS
-    int direction;
-    int startRow;
-
-    if (isWhite)
+    // captura diagonal
+    if (absInt(dc) == 1 && dr == direction)
     {
-        direction = -1;
-        startRow = 6;
-    }
-    else
-    {
-        direction = 1;
-        startRow = 1;
-    }
-
-    int deltaR = toRow - fromRow;
-    int deltaC_raw = toCol - fromCol;
-    int deltaC;
-
-
-    if (deltaC_raw < 0) {
-        deltaC = -deltaC_raw;
-    }
-    else {
-        deltaC = deltaC_raw;
-    }
-
-    char destinationPiece = getPiece(toRow, toCol);
-
-   //solo permitimos avance recto
-    if (deltaC != 0) {
-        return false;
-    }
-
-    //revisamos que la diferencia de fila sea en la dirección correcta
-    if (deltaR * direction < 0) {
-        return false;
-    }
-
-    //avanza UNA casilla
-    if (deltaR == direction) {
-        if (destinationPiece == emptySpace) {
-            return true;
-        }
-    }
-
-    //avanza DOS casillas pero solo si esta en la posicion inicial 
-    else if (deltaR == (2 * direction)) {
-        if (fromRow != startRow) {
-            return false;
-        }
-
-        //la casilla destino y la casilla origen tienen que estar vacíos
-        int intermediateRow = fromRow + direction;
-
-        //verificamos
-        if (getPiece(intermediateRow, fromCol) == emptySpace) {
-            if (destinationPiece == emptySpace) {
-                return true;
-            }
-        }
+        if (target == emptySpace) return false;
+        return !sameColor(piece, target);
     }
 
     return false;
 }
 
-   
- 
-
+// ---------- ROOK ----------
 
 bool isRookMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
     char piece = getPiece(fromRow, fromCol);
-    char target = getPiece(toRow, toCol);
+    if (piece != whiteTower && piece != blackTower)
+        return false;
 
     if (fromRow != toRow && fromCol != toCol)
         return false;
 
-    // Direction
-    int deltaRow = 0, deltaCol = 0;
-
-    if (toRow > fromRow)     
-        deltaRow = 1;
-    else if (toRow < fromRow) 
-        deltaRow = -1;
-
-    if (toCol > fromCol)     
-        deltaCol = 1;
-    else if (toCol < fromCol)
-        deltaCol = -1;
-
-    // Check no pieces in front
-    int row = fromRow + deltaRow;
-    int col = fromCol + deltaCol;
-
-    while (row != toRow || col != toCol)
-    {
-        if (getPiece(row, col) != emptySpace)
-            return false;
-
-        row += deltaRow;
-        col += deltaCol;
-    }
-
-    // Chack destination
-    if (target != emptySpace)
-    {
-        bool originWhite = std::isupper(static_cast<unsigned char>(piece));
-        bool targetWhite = std::isupper(static_cast<unsigned char>(target));
-
-        // Mismo color → movimiento ilegal
-        if (originWhite == targetWhite)
-            return false;
-    }
-
-    return true;
-}
-
-
-
-bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol) {
-    if (fromRow < 0 || fromRow >= BOARD_SIZE || toRow < 0 || toRow >= BOARD_SIZE ||
-        fromCol < 0 || fromCol >= BOARD_SIZE || toCol < 0 || toCol >= BOARD_SIZE) {
-        return false;
-    }
-
-    //mira si origen y destino son iguales pq sino es inválido
-    if (fromRow == toRow && fromCol == toCol) {
-        return false;
-    }
-
-    char piece = getPiece(fromRow, fromCol);
     char target = getPiece(toRow, toCol);
 
+    int stepR = (toRow > fromRow) ? 1 : (toRow < fromRow ? -1 : 0);
+    int stepC = (toCol > fromCol) ? 1 : (toCol < fromCol ? -1 : 0);
 
-    int deltaR_raw = toRow - fromRow;
-    int deltaC_raw = toCol - fromCol;
+    int r = fromRow + stepR;
+    int c = fromCol + stepC;
 
-    int deltaR_abs;
-    if (deltaR_raw < 0) {
-        deltaR_abs = -deltaR_raw;
-    }
-    else {
-        deltaR_abs = deltaR_raw;
-    }
-
-    int deltaC_abs;//deltaC absolut
-    if (deltaC_raw < 0) {
-        deltaC_abs = -deltaC_raw;
-    }
-    else {
-        deltaC_abs = deltaC_raw;
-    }
-
-    //movimiento recto 
-    bool isStraight = false;
-    if (deltaR_abs == 0 || deltaC_abs == 0) {
-        if (deltaR_abs > 0 || deltaC_abs > 0) {
-            isStraight = true;
-        }
-    }
-
-    //movimiento diagonal 
-    bool isDiagonal = false;
-    if (deltaR_abs == deltaC_abs) {
-        if (deltaR_abs > 0) {
-            isDiagonal = true;
-        }
-    }
-
-    //si no es ni recto ni diagonal
-    if (!isStraight && !isDiagonal) {
-        return false;
-    }
-
-    int deltaRow = 0;
-    int deltaCol = 0;
-
-    //dirección de Fila
-    if (toRow > fromRow) {
-        deltaRow = 1;
-    }
-    else if (toRow < fromRow) {
-        deltaRow = -1;
-    }
-
-    //dirección de Columna
-    if (toCol > fromCol) {
-        deltaCol = 1;
-    }
-    else if (toCol < fromCol) {
-        deltaCol = -1;
-    }
-
-
-    int row = fromRow + deltaRow;
-    int col = fromCol + deltaCol;
-
-    //miramos la trayectoria hasta llegar al destino
-    while (row != toRow || col != toCol) {
-        if (getPiece(row, col) != emptySpace) {
-            return false; //es que hay una pieza bloqueando el camino.
-        }
-
-        row += deltaRow;
-        col += deltaCol;
-    }
-
-
-    //mirat aixo roc pq no se si esta be del tot aquesta part pq ni ide d q es lo de static char, li he dit del chat q ho copies del teu codi de la torre
-    if (target != emptySpace) {
-
-        //color de la pieza de origen
-        bool originIsWhite;
-        if (std::isupper(static_cast<unsigned char>(piece))) {
-            originIsWhite = true;
-        }
-        else {
-            originIsWhite = false;
-        }
-
-        //el color de la pieza en el destino
-        bool targetIsWhite;
-        if (std::isupper(static_cast<unsigned char>(target))) {
-            targetIsWhite = true;
-        }
-        else {
-            targetIsWhite = false;
-        }
-
-        //si los colores son iguales, el movimiento es inválido (no se puede capturar una pieza amiga)
-        if (originIsWhite == targetIsWhite) {
+    while (r != toRow || c != toCol)
+    {
+        if (getPiece(r, c) != emptySpace)
             return false;
-        }
+        r += stepR;
+        c += stepC;
     }
+
+    if (target != emptySpace && sameColor(piece, target))
+        return false;
+
     return true;
 }
 
+// ---------- QUEEN ----------
+
+bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol)
+{
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
+    char piece = getPiece(fromRow, fromCol);
+    if (piece != whiteQueen && piece != blackQueen)
+        return false;
+
+    int dr = toRow - fromRow;
+    int dc = toCol - fromCol;
+
+    bool straight = (dr == 0 || dc == 0);
+    bool diagonal = (absInt(dr) == absInt(dc));
+
+    if (!straight && !diagonal)
+        return false;
+
+    char target = getPiece(toRow, toCol);
+
+    int stepR = (dr == 0) ? 0 : (dr > 0 ? 1 : -1);
+    int stepC = (dc == 0) ? 0 : (dc > 0 ? 1 : -1);
+
+    int r = fromRow + stepR;
+    int c = fromCol + stepC;
+
+    while (r != toRow || c != toCol)
+    {
+        if (getPiece(r, c) != emptySpace)
+            return false;
+        r += stepR;
+        c += stepC;
+    }
+
+    if (target != emptySpace && sameColor(piece, target))
+        return false;
+
+    return true;
+}
