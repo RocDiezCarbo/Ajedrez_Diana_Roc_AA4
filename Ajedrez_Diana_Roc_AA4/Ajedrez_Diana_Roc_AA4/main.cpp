@@ -4,6 +4,11 @@
 #include "board.h"
 #include "movement.h"
 
+void clearScreen() 
+{
+    std::cout << "\x1B[2J\x1B[H";
+}
+
 int main() {
 
     bool gameOver = false;
@@ -11,6 +16,7 @@ int main() {
 
     initBoard();     // set starting position
     printBoard();    // show initial board
+
 
     while (!gameOver)
     {
@@ -100,15 +106,18 @@ int main() {
         {
             setPiece(toRow, toCol, piece);
             setPiece(fromRow, fromCol, emptySpace);
-            printBoard();
-            whiteTurn = !whiteTurn;
+
+            whiteTurn = !whiteTurn;   // change turn
+            clearScreen();            // clear screen
+            printBoard();             // show board
         }
+
         else
         {
             std::cout << "Illegal move.\n";
         }
     
-        gameOver = true; // temporary while testing
+        gameOver = false; // temporary while testing
     }
 
     return 0;

@@ -5,22 +5,22 @@
 
 // ---------- utilidades internas ----------
 
-bool inBounds(int r, int c)
+static bool inBounds(int r, int c)
 {
     return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
 }
 
-bool isWhitePiece(char p)
+static bool isWhitePiece(char p)
 {
     return std::isupper(static_cast<unsigned char>(p));
 }
 
-bool sameColor(char a, char b)
+static bool sameColor(char a, char b)
 {
     return isWhitePiece(a) == isWhitePiece(b);
 }
 
-int absInt(int x)
+static int absInt(int x)
 {
     return (x < 0) ? -x : x;
 }

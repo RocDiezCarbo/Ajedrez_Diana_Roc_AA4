@@ -21,3 +21,4 @@ const char blackBishop = 'b';
 const char blackHorse = 'h';
 const char blackQueen = 'q';
 const char blackKing = 'k';
+
