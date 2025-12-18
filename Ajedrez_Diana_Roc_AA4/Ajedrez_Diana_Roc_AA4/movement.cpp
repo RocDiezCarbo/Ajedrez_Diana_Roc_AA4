@@ -60,7 +60,7 @@ bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
         int midRow = fromRow + direction;
         return getPiece(midRow, fromCol) == emptySpace &&
-            target == emptySpace;
+               target == emptySpace;
     }
 
     // captura diagonal
@@ -159,4 +159,19 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol)
         return false;
 
     return true;
+}
+
+// ---------- KING ----------
+
+bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol) 
+{
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
+    char piece = getPiece(fromRow, fromCol);
+    if (piece != whiteKing && piece != blackKing)
+        return false;
 }
