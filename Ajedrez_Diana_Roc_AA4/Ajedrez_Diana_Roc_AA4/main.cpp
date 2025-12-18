@@ -107,8 +107,8 @@ int main() {
         {
             std::cout << "Illegal move.\n";
         }
-
-        gameOver = true;  // temporary while testing
+    
+        gameOver = true; // temporary while testing
     }
 
     return 0;
