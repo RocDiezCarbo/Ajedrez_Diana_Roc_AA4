@@ -175,3 +175,21 @@ bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     if (piece != whiteKing && piece != blackKing)
         return false;
 }
+
+// ---------- BISHOP ----------
+
+bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
+{
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
+    char piece = getPiece(fromRow, fromCol);
+    if (piece != whiteBishop && piece != blackBishop)
+        return false;
+
+
+}
+
