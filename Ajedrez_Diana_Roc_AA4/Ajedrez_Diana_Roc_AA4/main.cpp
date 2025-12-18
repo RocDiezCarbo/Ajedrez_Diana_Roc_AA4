@@ -97,7 +97,10 @@ int main() {
 
         else if (piece == whiteTower || piece == blackTower)
             moveValid = isRookMoveValid(fromRow, fromCol, toRow, toCol);
-
+        else if (piece == whiteBishop || piece == blackBishop)
+            moveValid = isBishopMoveValid(fromRow, fromCol, toRow, toCol);
+        else if (piece == whiteKing || piece == blackKing)
+            moveValid = isKingMoveValid(fromRow, fromCol, toRow, toCol);
         else
             std::cout << "Piece not implemented.\n";
 

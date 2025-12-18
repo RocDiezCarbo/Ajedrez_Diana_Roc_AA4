@@ -159,11 +159,11 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol)
         return false;
 
     return true;
-}
 
+}
 // ---------- KING ----------
 
-bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol) 
+bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
     if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
         return false;
@@ -175,8 +175,20 @@ bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     if (piece != whiteKing && piece != blackKing)
         return false;
 
+    int dr = absInt(toRow - fromRow);
+    int dc = absInt(toCol - fromCol);
 
+    if (dr > 1 || dc > 1)
+    {
+        return false;
+    }
 
+    char target = getPiece(toRow, toCol);
+
+    if (target != emptySpace && sameColor(piece, target))
+        return false;
+
+    return true;
 }
 
 // ---------- BISHOP ----------
