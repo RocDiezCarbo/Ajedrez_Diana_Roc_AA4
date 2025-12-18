@@ -5,22 +5,22 @@
 
 // ---------- utilidades internas ----------
 
-static inline bool inBounds(int r, int c)
+bool inBounds(int r, int c)
 {
     return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
 }
 
-static inline bool isWhitePiece(char p)
+bool isWhitePiece(char p)
 {
     return std::isupper(static_cast<unsigned char>(p));
 }
 
-static inline bool sameColor(char a, char b)
+bool sameColor(char a, char b)
 {
     return isWhitePiece(a) == isWhitePiece(b);
 }
 
-static inline int absInt(int x)
+int absInt(int x)
 {
     return (x < 0) ? -x : x;
 }
@@ -48,14 +48,16 @@ bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
     char target = getPiece(toRow, toCol);
 
-    // avance 1
+    // avance de una casilla
     if (dc == 0 && dr == direction)
         return target == emptySpace;
 
-    // avance 2 desde inicio
+    // avance de dos casillas desde la posición inicial
     if (dc == 0 && dr == 2 * direction)
     {
-        if (fromRow != startRow) return false;
+        if (fromRow != startRow)
+            return false;
+
         int midRow = fromRow + direction;
         return getPiece(midRow, fromCol) == emptySpace &&
             target == emptySpace;
@@ -64,7 +66,9 @@ bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     // captura diagonal
     if (absInt(dc) == 1 && dr == direction)
     {
-        if (target == emptySpace) return false;
+        if (target == emptySpace)
+            return false;
+
         return !sameColor(piece, target);
     }
 
@@ -100,6 +104,7 @@ bool isRookMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     {
         if (getPiece(r, c) != emptySpace)
             return false;
+
         r += stepR;
         c += stepC;
     }
@@ -145,6 +150,7 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     {
         if (getPiece(r, c) != emptySpace)
             return false;
+
         r += stepR;
         c += stepC;
     }
