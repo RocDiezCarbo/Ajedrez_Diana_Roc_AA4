@@ -6,7 +6,7 @@
 
 void clearScreen() 
 {
-    std::cout << "\x1B[2J\x1B[H";
+    system("cls");
 }
 
 int main() {
