@@ -174,11 +174,14 @@ bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     char piece = getPiece(fromRow, fromCol);
     if (piece != whiteKing && piece != blackKing)
         return false;
+
+
+
 }
 
 // ---------- BISHOP ----------
 
-bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
+bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
     if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
         return false;
@@ -191,5 +194,38 @@ bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
         return false;
 
 
+    int dr = toRow - fromRow;
+    int dc = toCol - fromCol;
+
+    bool diagonal = (absInt(dr) == absInt(dc));
+
+    if (!diagonal)
+    {
+        return false; 
+    }
+
+    char target = getPiece(toRow, toCol);
+
+    int stepR = (dr == 0) ? 0 : (dr > 0 ? 1 : -1);
+    int stepC = (dc == 0) ? 0 : (dc > 0 ? 1 : -1);
+
+    int r = fromRow + stepR;
+    int c = fromCol + stepC;
+
+    while (r != toRow || c != toCol)
+    {
+        if (getPiece(r, c) != emptySpace)
+            return false;
+
+        r += stepR;
+        c += stepC;
+    }
+
+    if (target != emptySpace && sameColor(piece, target))
+        return false;
+
+    return true;
 }
+
+
 
