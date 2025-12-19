@@ -122,6 +122,17 @@ int main() {
             setPiece(toRow, toCol, piece);
             setPiece(fromRow, fromCol, emptySpace);
 
+            // ---------- Pawn promotion ----------
+            // If a pawn reaches the opposite end, promote to queen
+            if (piece == whitePawn && toRow == 0)
+            {
+                setPiece(toRow, toCol, whiteQueen);
+            }
+            else if (piece == blackPawn && toRow == BOARD_SIZE - 1)
+            {
+                setPiece(toRow, toCol, blackQueen);
+            }
+
             whiteTurn = !whiteTurn;   // change turn
             clearScreen();            // clear screen
             printBoard();             // show board
