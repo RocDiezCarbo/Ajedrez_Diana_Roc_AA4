@@ -3,11 +3,8 @@
 #include "constants.h"
 #include "board.h"
 #include "movement.h"
+#include "check.h"
 
-void clearScreen() 
-{
-    system("cls");
-}
 
 int main() {
 
@@ -92,17 +89,32 @@ int main() {
         // Validate movement 
         bool moveValid = false;
 
-        if (piece == whitePawn || piece == blackPawn)
+        switch (std::tolower(static_cast<unsigned char>(piece)))
+        {
+        case 'p':   // pawn
             moveValid = isPawnMoveValid(fromRow, fromCol, toRow, toCol);
+            break;
 
-        else if (piece == whiteTower || piece == blackTower)
+        case 't':   // rook (tower)
             moveValid = isRookMoveValid(fromRow, fromCol, toRow, toCol);
-        else if (piece == whiteBishop || piece == blackBishop)
+            break;
+
+        case 'b':   // bishop
             moveValid = isBishopMoveValid(fromRow, fromCol, toRow, toCol);
-        else if (piece == whiteKing || piece == blackKing)
+            break;
+
+        case 'k':   // king
             moveValid = isKingMoveValid(fromRow, fromCol, toRow, toCol);
-        else
+            break;
+        case 'h':   // horse
+            moveValid = isHorseMoveValid(fromRow, fromCol, toRow, toCol);
+            break;
+
+        default:
             std::cout << "Piece not implemented.\n";
+            moveValid = false;
+            break;
+        }
 
         // Apply movement
         if (moveValid)
@@ -113,6 +125,18 @@ int main() {
             whiteTurn = !whiteTurn;   // change turn
             clearScreen();            // clear screen
             printBoard();             // show board
+
+            // Say if is in check
+            if (isKingInCheck(whiteTurn))
+                std::cout << "Check!\n";
+
+            // Say if is in check mate
+            if (isCheckmate(whiteTurn))
+            {
+                std::cout << (whiteTurn ? "Checkmate! Black wins.\n"
+                    : "Checkmate! White wins.\n");
+                gameOver = true;
+            }
         }
 
         else
@@ -120,7 +144,6 @@ int main() {
             std::cout << "Illegal move.\n";
         }
     
-        gameOver = false; // temporary while testing
     }
 
     return 0;

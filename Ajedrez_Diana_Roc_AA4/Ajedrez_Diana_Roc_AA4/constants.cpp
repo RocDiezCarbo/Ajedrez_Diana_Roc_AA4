@@ -1,4 +1,5 @@
 #include "constants.h"
+#include <iostream>
 
 // Global board array used by the whole program
 char board[BOARD_SIZE][BOARD_SIZE];
@@ -22,3 +23,7 @@ const char blackHorse = 'h';
 const char blackQueen = 'q';
 const char blackKing = 'k';
 
+void clearScreen()
+{
+    system("cls");
+}

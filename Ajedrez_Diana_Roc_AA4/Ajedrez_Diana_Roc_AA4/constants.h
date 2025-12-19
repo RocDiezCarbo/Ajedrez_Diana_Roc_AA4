@@ -24,3 +24,5 @@ extern const char blackBishop;
 extern const char blackHorse;
 extern const char blackQueen;
 extern const char blackKing;
+
+void clearScreen();

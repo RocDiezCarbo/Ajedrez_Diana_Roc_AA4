@@ -17,8 +17,11 @@ static bool isWhitePiece(char p)
 
 static bool sameColor(char a, char b)
 {
+    if (a == emptySpace || b == emptySpace) return false;
     return isWhitePiece(a) == isWhitePiece(b);
 }
+
+
 
 static int absInt(int x)
 {
@@ -239,5 +242,51 @@ bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     return true;
 }
 
+// ---------- HORSE ----------
 
+bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol)
+{
+    if (!inBounds(fromRow, fromCol) || !inBounds(toRow, toCol))
+        return false;
+
+    if (fromRow == toRow && fromCol == toCol)
+        return false;
+
+    char piece = getPiece(fromRow, fromCol);
+    if (piece != whiteHorse && piece != blackHorse)
+        return false;
+
+    int dr = absInt(toRow - fromRow);
+    int dc = absInt(toCol - fromCol);
+
+    // Movement "L": (2,1) o (1,2)
+    bool lShape = (dr == 2 && dc == 1) || (dr == 1 && dc == 2);
+    if (!lShape)
+        return false;
+
+    char target = getPiece(toRow, toCol);
+
+    // Same color
+    if (target != emptySpace && sameColor(piece, target))
+        return false;
+
+    return true;
+}
+
+bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targetC)
+{
+    unsigned char up = static_cast<unsigned char>(enemyPiece);
+    char type = static_cast<char>(std::tolower(up));
+
+    // Caso especial: peón (ataque != movimiento)
+    if (type == 'p')
+    {
+        bool enemyIsWhite = std::isupper(up);
+        int dir = enemyIsWhite ? -1 : 1;
+        int dr = targetR - fromR;
+        int dc = targetC - fromC;
+
+        return (dr == dir) && (absInt(dc) == 1);
+    }
+}
 

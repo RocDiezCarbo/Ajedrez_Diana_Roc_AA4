@@ -88,3 +88,20 @@ char getPiece(int row, int col) {
 void setPiece(int row, int col, char piece) {
     board[row][col] = piece;
 }
+
+bool findKing(bool white, int& row, int& col)
+{
+    char king = white ? whiteKing : blackKing;
+
+    for (int r = 0; r < BOARD_SIZE; ++r)
+        for (int c = 0; c < BOARD_SIZE; ++c)
+        {
+            if (getPiece(r, c) == king)
+            {
+                row = r;
+                col = c;
+                return true;
+            }
+        }
+    return false;
+}

@@ -22,3 +22,6 @@ char getPiece(int row, int col);
 
 // Sets the piece at the given row and column.
 void setPiece(int row, int col, char piece);
+
+// Find the king in the board
+bool findKing(bool white, int& row, int& col);

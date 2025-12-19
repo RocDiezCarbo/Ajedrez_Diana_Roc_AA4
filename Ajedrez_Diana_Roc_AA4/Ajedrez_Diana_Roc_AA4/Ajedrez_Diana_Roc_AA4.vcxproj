@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cpp" />
+    <ClCompile Include="check.cpp" />
     <ClCompile Include="constants.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="movement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <ClInclude Include="check.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="movement.h" />
   </ItemGroup>

@@ -13,4 +13,10 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol);
 bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol);
 
 // King move validation 
-bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
+bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol);
+
+// Horse move validation
+bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol);
+
+// Use it for check and chake mate
+bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targetC);
