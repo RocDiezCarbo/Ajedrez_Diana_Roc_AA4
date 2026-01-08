@@ -110,6 +110,10 @@ int main() {
             moveValid = isHorseMoveValid(fromRow, fromCol, toRow, toCol);
             break;
 
+        case 'q':
+            moveValid = isQueenMoveValid(fromRow, fromCol, toRow, toCol);
+            break;
+
         default:
             std::cout << "Piece not implemented.\n";
             moveValid = false;
@@ -119,11 +123,37 @@ int main() {
         // Apply movement
         if (moveValid)
         {
+            // Guardar lo que había en destino ANTES de sobrescribirlo
+            char captured = getPiece(toRow, toCol);
+
+            // Movimiento provisional
             setPiece(toRow, toCol, piece);
             setPiece(fromRow, fromCol, emptySpace);
 
+            // ---------- BLOQUEO: no permitir dejar tu rey en jaque ----------
+            if (isKingInCheck(whiteTurn))
+            {
+                // Deshacer movimiento
+                setPiece(fromRow, fromCol, piece);
+                setPiece(toRow, toCol, captured);
+
+                std::cout << "Illegal move (your king would be in check).\n";
+                continue;
+            }
+
+            // ---------- END GAME: king captured ----------
+            char enemyKing = whiteTurn ? blackKing : whiteKing;
+            if (captured == enemyKing)
+            {
+                clearScreen();
+                printBoard();
+                std::cout << (whiteTurn ? "White wins (king captured).\n"
+                    : "Black wins (king captured).\n");
+                gameOver = true;
+                continue;
+            }
+
             // ---------- Pawn promotion ----------
-            // If a pawn reaches the opposite end, promote to queen
             if (piece == whitePawn && toRow == 0)
             {
                 setPiece(toRow, toCol, whiteQueen);
@@ -137,11 +167,9 @@ int main() {
             clearScreen();            // clear screen
             printBoard();             // show board
 
-            // Say if is in check
             if (isKingInCheck(whiteTurn))
                 std::cout << "Check!\n";
 
-            // Say if is in check mate
             if (isCheckmate(whiteTurn))
             {
                 std::cout << (whiteTurn ? "Checkmate! Black wins.\n"
@@ -149,13 +177,12 @@ int main() {
                 gameOver = true;
             }
         }
-
         else
         {
             std::cout << "Illegal move.\n";
         }
-    
+
+        return 0;
     }
 
-    return 0;
 }

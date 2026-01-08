@@ -275,18 +275,84 @@ bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
 bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targetC)
 {
+    // Seguridad de límites
+    if (!inBounds(fromR, fromC) || !inBounds(targetR, targetC))
+        return false;
+
+    if (fromR == targetR && fromC == targetC)
+        return false;
+
     unsigned char up = static_cast<unsigned char>(enemyPiece);
     char type = static_cast<char>(std::tolower(up));
 
-    // Caso especial: peón (ataque != movimiento)
+    int dr = targetR - fromR;
+    int dc = targetC - fromC;
+
+    // ---------- PEÓN (ataque != movimiento) ----------
     if (type == 'p')
     {
         bool enemyIsWhite = std::isupper(up);
-        int dir = enemyIsWhite ? -1 : 1;
-        int dr = targetR - fromR;
-        int dc = targetC - fromC;
-
+        int dir = enemyIsWhite ? -1 : 1; // blanco ataca hacia arriba, negro hacia abajo
         return (dr == dir) && (absInt(dc) == 1);
     }
+
+    // ---------- CABALLO (H/h en tu proyecto) ----------
+    if (type == 'h')
+    {
+        return (absInt(dr) == 2 && absInt(dc) == 1) ||
+            (absInt(dr) == 1 && absInt(dc) == 2);
+    }
+
+    // ---------- REY ----------
+    if (type == 'k')
+    {
+        return (absInt(dr) <= 1 && absInt(dc) <= 1);
+    }
+
+    // Para deslizantes calculamos paso y validamos geometría
+    int stepR = (dr == 0) ? 0 : (dr > 0 ? 1 : -1);
+    int stepC = (dc == 0) ? 0 : (dc > 0 ? 1 : -1);
+
+    // ---------- TORRE (T/t en tu proyecto) ----------
+    if (type == 't')
+    {
+        if (dr != 0 && dc != 0)
+            return false;
+    }
+    // ---------- ALFIL ----------
+    else if (type == 'b')
+    {
+        if (absInt(dr) != absInt(dc))
+            return false;
+    }
+    // ---------- REINA ----------
+    else if (type == 'q')
+    {
+        bool straight = (dr == 0 || dc == 0);
+        bool diagonal = (absInt(dr) == absInt(dc));
+        if (!straight && !diagonal)
+            return false;
+    }
+    else
+    {
+        // pieza no reconocida
+        return false;
+    }
+
+    // ---------- comprobar bloqueos ----------
+    int r = fromR + stepR;
+    int c = fromC + stepC;
+
+    while (r != targetR || c != targetC)
+    {
+        if (getPiece(r, c) != emptySpace)
+            return false;
+
+        r += stepR;
+        c += stepC;
+    }
+
+    return true;
 }
+
 
