@@ -180,9 +180,8 @@ int main() {
         else
         {
             std::cout << "Illegal move.\n";
-        }
-
-        return 0;
+        }       
     }
+    return 0;
 
-}
+}   
