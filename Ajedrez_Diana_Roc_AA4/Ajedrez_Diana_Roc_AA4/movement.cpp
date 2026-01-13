@@ -18,7 +18,9 @@ static bool isWhitePiece(char p)
 
 static bool sameColor(char a, char b)
 {
-    if (a == emptySpace || b == emptySpace) return false;
+    if (a == emptySpace || b == emptySpace) {
+        return false;
+    }
     return isWhitePiece(a) == isWhitePiece(b);
 }
 
