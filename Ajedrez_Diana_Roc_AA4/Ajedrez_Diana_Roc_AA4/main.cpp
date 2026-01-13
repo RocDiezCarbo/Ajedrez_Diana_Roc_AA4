@@ -1,10 +1,10 @@
+
 #include <iostream>
 #include <cctype>
 #include "constants.h"
 #include "board.h"
 #include "movement.h"
 #include "check.h"
-
 
 int main() {
 
@@ -13,7 +13,6 @@ int main() {
 
     initBoard();     // set starting position
     printBoard();    // show initial board
-
 
     while (!gameOver)
     {
@@ -123,17 +122,17 @@ int main() {
         // Apply movement
         if (moveValid)
         {
-            // Guardar lo que había en destino ANTES de sobrescribirlo
+            // Save what was at the destination BEFORE overwriting it
             char captured = getPiece(toRow, toCol);
 
-            // Movimiento provisional
+            // Provisional move
             setPiece(toRow, toCol, piece);
             setPiece(fromRow, fromCol, emptySpace);
 
-            // ---------- BLOQUEO: no permitir dejar tu rey en jaque ----------
+            // ---------- BLOCK: do not allow leaving the king in check ----------
             if (isKingInCheck(whiteTurn))
             {
-                // Deshacer movimiento
+                // Undo movement
                 setPiece(fromRow, fromCol, piece);
                 setPiece(toRow, toCol, captured);
 
@@ -180,8 +179,7 @@ int main() {
         else
         {
             std::cout << "Illegal move.\n";
-        }       
+        }
     }
     return 0;
-
-}   
+}

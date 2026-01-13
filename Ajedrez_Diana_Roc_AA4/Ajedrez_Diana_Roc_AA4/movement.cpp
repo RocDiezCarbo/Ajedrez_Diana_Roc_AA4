@@ -1,9 +1,10 @@
-﻿#include "board.h"
+﻿
+#include "board.h"
 #include "constants.h"
 #include "movement.h"
 #include <cctype>
 
-// ---------- utilidades internas ----------
+// ---------- internal utilities ----------
 
 static bool inBounds(int r, int c)
 {
@@ -20,8 +21,6 @@ static bool sameColor(char a, char b)
     if (a == emptySpace || b == emptySpace) return false;
     return isWhitePiece(a) == isWhitePiece(b);
 }
-
-
 
 static int absInt(int x)
 {
@@ -51,11 +50,11 @@ bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
     char target = getPiece(toRow, toCol);
 
-    // avance de una casilla
+    // One-square advance
     if (dc == 0 && dr == direction)
         return target == emptySpace;
 
-    // avance de dos casillas desde la posición inicial
+    // Two-square advance from starting position
     if (dc == 0 && dr == 2 * direction)
     {
         if (fromRow != startRow)
@@ -63,10 +62,10 @@ bool isPawnMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
         int midRow = fromRow + direction;
         return getPiece(midRow, fromCol) == emptySpace &&
-               target == emptySpace;
+            target == emptySpace;
     }
 
-    // captura diagonal
+    // Diagonal capture
     if (absInt(dc) == 1 && dr == direction)
     {
         if (target == emptySpace)
@@ -164,6 +163,7 @@ bool isQueenMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     return true;
 
 }
+
 // ---------- KING ----------
 
 bool isKingMoveValid(int fromRow, int fromCol, int toRow, int toCol)
@@ -208,7 +208,6 @@ bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     if (piece != whiteBishop && piece != blackBishop)
         return false;
 
-
     int dr = toRow - fromRow;
     int dc = toCol - fromCol;
 
@@ -216,7 +215,7 @@ bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
     if (!diagonal)
     {
-        return false; 
+        return false;
     }
 
     char target = getPiece(toRow, toCol);
@@ -242,7 +241,7 @@ bool isBishopMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     return true;
 }
 
-// ---------- HORSE ----------
+// ---------- KNIGHT ----------
 
 bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 {
@@ -259,14 +258,14 @@ bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol)
     int dr = absInt(toRow - fromRow);
     int dc = absInt(toCol - fromCol);
 
-    // Movement "L": (2,1) o (1,2)
+    // "L" Shape Movement: (2,1) or (1,2)
     bool lShape = (dr == 2 && dc == 1) || (dr == 1 && dc == 2);
     if (!lShape)
         return false;
 
     char target = getPiece(toRow, toCol);
 
-    // Same color
+    // Prevent capturing pieces of the same color
     if (target != emptySpace && sameColor(piece, target))
         return false;
 
@@ -275,7 +274,7 @@ bool isHorseMoveValid(int fromRow, int fromCol, int toRow, int toCol)
 
 bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targetC)
 {
-    // Seguridad de límites
+    // Bounds safety check
     if (!inBounds(fromR, fromC) || !inBounds(targetR, targetC))
         return false;
 
@@ -288,44 +287,43 @@ bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targe
     int dr = targetR - fromR;
     int dc = targetC - fromC;
 
-    // ---------- PEÓN (ataque != movimiento) ----------
+    // ---------- PAWN (attack logic != movement logic) ----------
     if (type == 'p')
     {
         bool enemyIsWhite = std::isupper(up);
-        int dir = enemyIsWhite ? -1 : 1; // blanco ataca hacia arriba, negro hacia abajo
+        int dir = enemyIsWhite ? -1 : 1; // white attacks upwards, black downwards
         return (dr == dir) && (absInt(dc) == 1);
     }
 
-    // ---------- CABALLO (H/h en tu proyecto) ----------
+    // ---------- KNIGHT (H/h in project) ----------
     if (type == 'h')
     {
-        return (absInt(dr) == 2 && absInt(dc) == 1) ||
-            (absInt(dr) == 1 && absInt(dc) == 2);
+        return (absInt(dr) == 2 && absInt(dc) == 1) || (absInt(dr) == 1 && absInt(dc) == 2);
     }
 
-    // ---------- REY ----------
+    // ---------- KING ----------
     if (type == 'k')
     {
         return (absInt(dr) <= 1 && absInt(dc) <= 1);
     }
 
-    // Para deslizantes calculamos paso y validamos geometría
+    // For sliding pieces, calculate step and validate geometry
     int stepR = (dr == 0) ? 0 : (dr > 0 ? 1 : -1);
     int stepC = (dc == 0) ? 0 : (dc > 0 ? 1 : -1);
 
-    // ---------- TORRE (T/t en tu proyecto) ----------
+    // ---------- ROOK (T/t in project) ----------
     if (type == 't')
     {
         if (dr != 0 && dc != 0)
             return false;
     }
-    // ---------- ALFIL ----------
+    // ---------- BISHOP ----------
     else if (type == 'b')
     {
         if (absInt(dr) != absInt(dc))
             return false;
     }
-    // ---------- REINA ----------
+    // ---------- QUEEN ----------
     else if (type == 'q')
     {
         bool straight = (dr == 0 || dc == 0);
@@ -335,11 +333,11 @@ bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targe
     }
     else
     {
-        // pieza no reconocida
+        // Unrecognized piece
         return false;
     }
 
-    // ---------- comprobar bloqueos ----------
+    // ---------- check for blocking pieces (obstacles) ----------
     int r = fromR + stepR;
     int c = fromC + stepC;
 
@@ -354,5 +352,3 @@ bool attacksSquare(char enemyPiece, int fromR, int fromC, int targetR, int targe
 
     return true;
 }
-
-
